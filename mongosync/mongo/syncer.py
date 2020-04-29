@@ -91,13 +91,10 @@ class MongoSyncer(CommonSyncer):
 
         while True:
             try:
-                cursor = self._src.client()[src_dbname][src_collname].find(filter=None,
-                                                                           cursor_type=pymongo.cursor.CursorType.EXHAUST,
-                                                                           no_cursor_timeout=True,
-                                                                           modifiers={'$snapshot': True})
+                cursor = self._src.client()[src_dbname][src_collname].find(no_cursor_timeout=True)
 
                 reqs = []
-                reqs_max = 200
+                reqs_max = 100
                 groups = []
                 groups_max = 10
                 n = 0
@@ -113,7 +110,7 @@ class MongoSyncer(CommonSyncer):
                         groups = []
 
                     n += 1
-                    if n % 10000 == 0:
+                    if n % 1000 == 0:
                         self._progress_logger.add(src_ns, n)
                         n = 0
 
