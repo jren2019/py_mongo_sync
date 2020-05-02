@@ -150,6 +150,11 @@ def get_optime(mc):
 
     Refer to https://docs.mongodb.com/manual/reference/command/replSetGetStatus/
     """
+    version = mc.server_info()['version']
+    if version.startswith('4.2.'):
+        doc = mc['local']['oplog.rs'].find_one(sort=[('$natural', -1)])
+        return doc['ts']
+
     rs_status = mc['admin'].command({'replSetGetStatus': 1})
     members = rs_status.get('members')
     if not members:
