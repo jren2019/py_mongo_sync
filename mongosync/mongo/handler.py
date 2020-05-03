@@ -88,7 +88,6 @@ class MongoHandler(object):
         """
         while True:
             try:
-                print("999")
                 self._mc[dbname][collname].bulk_write(reqs,
                                                       ordered=True,
                                                       bypass_document_validation=False)
